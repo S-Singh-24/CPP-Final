@@ -26,9 +26,11 @@ public:
 	void addProduct(Product& product, int number);
 	void removeProduct(int productID, int number);
 	void viewProductList();
+	void addStaff(Staff& staff);
+	void removeStaff(int employeeID);
 	void viewStaffList();
-  void addCash(double amount);
-  void removeCash(double amount);
+  	void addCash(double amount);
+  	void removeCash(double amount);
 };
 
 #endif //STORE_H
