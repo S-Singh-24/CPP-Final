@@ -8,21 +8,22 @@
 class Store {
 private:
 	std::string storeName; //Name of the store
-	std::vector<Product> inventory; //Vector containing all products in the store's inventory, using Product class
+	std::vector<std::vector<Product>> inventory; //Vector containing all products in the store's inventory, using Product class
 	std::vector<Staff> staff; //Vector containing all staff employed at store, using Staff class
 	double storeTotalCash; //Amount of money in store registers
 
 public:
 	//Constructor
-	Store(std::string name, std::vector<Product> inventory, std::vector<Staff> staff, double cash);
+	Store(std::string name, std::vector<std::vector<Product>> inventory, std::vector<Staff> staff, double cash);
 
 	//Getters
 	std::string getName();
-	std::vector<Product> getInventory();
+	std::vector<std::vector<Product>> getInventory();
 	std::vector<Staff> getStaff();
 	double getStoreTotalCash();
 
 	//Other methods
+	void changeName(std::string newStoreName);
 	void addProduct(Product& product, int number);
 	void removeProduct(int productID, int number);
 	void viewProductList();
