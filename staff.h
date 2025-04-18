@@ -7,7 +7,7 @@ class Staff {
 private:
     int staffID;
     std::string name;
-    std::string position;  // e.g., "Manager", "Cashier", "Stock Clerk"
+    std::string position;
     bool isActive;
     
 public:
