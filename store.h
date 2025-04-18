@@ -17,19 +17,24 @@ public:
 	Store(std::string name, std::vector<std::vector<Product>> inventory, std::vector<Staff> staff, double cash);
 
 	//Getters
-	std::string getName();
-	std::vector<std::vector<Product>> getInventory();
-	std::vector<Staff> getStaff();
-	double getStoreTotalCash();
+    const std::string& getName() const;
+    const std::vector<Product>& getInventory() const;
+    const std::vector<Staff>& getStaff() const;
+    double getStoreTotalCash() const;
 
-	//Other methods
-	void changeName(std::string newStoreName);
-	void addProduct(Product& product, int number);
-	void removeProduct(int productID, int number);
-	void viewProductList();
+	
+	//Staff management
 	void addStaff(Staff& staff);
 	void removeStaff(int employeeID);
 	void viewStaffList();
+
+	//Product management
+	void addProduct(const Product& product);
+    void removeProduct(int productID, int quantity);
+	void viewProductList();
+
+	//Other methods
+	void changeName(std::string newStoreName);
   	void addCash(double amount);
   	void removeCash(double amount);
 };
