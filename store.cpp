@@ -97,19 +97,15 @@ void Store::addStaff(Staff& newStaffMember) {
 	}
 }
 
+// Update removeStaff() to deactivate instead of erase:
 void Store::removeStaff(int employeeID) {
-	try {
-		for (int i = 0; i < staff.size(); i++) { //Iterate through staff vector
-			if (staff.at(i).getEmployeeID == employeeID) { //Find instance of employee ID to remove
-				staff.at(i).erase(); //Remove staff member with that employee ID
-				return;
-			}
-		}
-		throw std::invalid_argument; //If employee ID not found in staff vector, throw exception
-	}
-	catch (std::invalid_argument const& e) {
-		std::cout << "Employee ID not found. Please try again."; //Catch exception
-	}
+    for (auto& s : staff) {
+        if (s.getStaffID() == employeeID) {
+            s.setIsActive(false);
+            return;
+        }
+    }
+    throw std::invalid_argument("Employee ID not found");
 }
 
 void Store::viewStaffList() {

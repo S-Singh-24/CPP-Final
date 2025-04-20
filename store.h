@@ -8,7 +8,7 @@
 class Store {
 private:
 	std::string storeName; //Name of the store
-	std::vector<std::vector<Product>> inventory; //Vector containing all products in the store's inventory, using Product class
+	std::vector<Product> inventory; //Vector containing all products in the store's inventory, using Product class
 	std::vector<Staff> staff; //Vector containing all staff employed at store, using Staff class
 	double storeTotalCash; //Amount of money in store registers
 
