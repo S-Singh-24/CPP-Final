@@ -1,3 +1,4 @@
+#include <iostream>
 #include "staff.h"
 #include <stdexcept>
 
