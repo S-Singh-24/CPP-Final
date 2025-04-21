@@ -102,9 +102,11 @@ void Store::removeStaff(int employeeID) {
 	throw std::invalid_argument("Employee ID not found");
 }
 
+//Updated to reflect implementation of printStaffMember() in Staff
 void Store::viewStaffList() {
 	for (int i = 0; i < staff.size(); i++) {
-		std::cout << staff.at(i).printStaffMember() << std::endl; //Types out list of all staff members - refine later
+		staff.at(i).printStaffMember(); //Loops through each staff member, printing info one by one
+		std::cout << std::endl;
 	}
 }
 
