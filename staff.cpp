@@ -46,6 +46,6 @@ void Staff::setIsActive(bool active) {
 }
 
 // Other methods
-void Staff::printStaffMember(Staff& staffMember) {
-    std::cout << "Employee ID: " << staffMember.getStaffID() << ", Name: " << staffMember.getName() << ", Position: " << staffMember.getPosition() << ", Currently active?: " << staffMember.getIsActive();
+void Staff::printStaffMember() {
+    std::cout << "Employee ID: " << staffID << ", Name: " << name << ", Position: " << position << ", Currently active?: " << isActive;
 }
