@@ -14,7 +14,7 @@ private:
 
 public:
 	//Constructor
-	Store(std::string name, std::vector<std::vector<Product>> inventory, std::vector<Staff> staff, double cash);
+	Store(std::string name, std::vector<Product> inventory, std::vector<Staff> staff, double cash);
 
 	//Getters
     const std::string& getName() const;
