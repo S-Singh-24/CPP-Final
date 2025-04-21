@@ -29,7 +29,7 @@ public:
 	void viewStaffList();
 
 	//Product management
-	void addProduct(const Product& product);
+	void addProduct(const Product& product, int quantity);
     void removeProduct(int productID, int quantity);
 	void viewProductList();
 
