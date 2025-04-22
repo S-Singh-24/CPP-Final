@@ -1,3 +1,4 @@
+#include <iostream>
 #include "product.h"
 #include <stdexcept> // For std::invalid_argument
 
@@ -67,4 +68,8 @@ void Product::increaseQuantity(int amount) {
         throw std::invalid_argument("Increase amount must be positive");
     }
     quantityInStock += amount;
+}
+
+void Product::printProduct() {
+    std::cout << "Product ID: " << productID << ", Name: " << name << ", Price: " << price << ", Quantity in stock: " << quantityInStock;
 }
