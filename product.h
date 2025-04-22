@@ -27,6 +27,7 @@ public:
     //methods
     void decreaseQuantity(int amount);
     void increaseQuantity(int amount);
+    void printProduct();
 };
 
 #endif // PRODUCT_H
