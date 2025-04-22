@@ -1,3 +1,4 @@
+#include <iostream>
 #include "staff.h"
 #include <stdexcept>
 
@@ -43,4 +44,9 @@ void Staff::setPosition(std::string newPosition) {
 
 void Staff::setIsActive(bool active) {
     isActive = active;
+}
+
+// Other methods
+void Staff::printStaffMember() {
+    std::cout << "Employee ID: " << staffID << ", Name: " << name << ", Position: " << position << ", Currently active?: " << isActive;
 }

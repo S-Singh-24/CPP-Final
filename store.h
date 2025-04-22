@@ -14,7 +14,7 @@ private:
 
 public:
 	//Constructor
-	Store(std::string name, std::vector<std::vector<Product>> inventory, std::vector<Staff> staff, double cash);
+	Store(std::string name, std::vector<Product> inventory, std::vector<Staff> staff, double cash);
 
 	//Getters
     const std::string& getName() const;
@@ -29,7 +29,7 @@ public:
 	void viewStaffList();
 
 	//Product management
-	void addProduct(const Product& product);
+	void addProduct(const Product& product, int quantity);
     void removeProduct(int productID, int quantity);
 	void viewProductList();
 

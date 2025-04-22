@@ -24,6 +24,10 @@ public:
     void setName(std::string newName);
     void setPosition(std::string newPosition);
     void setIsActive(bool active);
+
+    // Other methods
+    void printStaffMember();
+
 };
 
 #endif // STAFF_H
