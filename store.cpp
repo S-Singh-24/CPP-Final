@@ -83,7 +83,7 @@ void Store::viewProductList() {
 void Store::addStaff(Staff& newStaffMember) {
 	try {
 		for (int i = 0; i < staff.size(); i++) { //Iterate through staff vector
-			if (staff.at(i).getEmployeeID() == newStaffMember.getEmployeeID()) { //Check to see if employee ID already taken
+			if (staff.at(i).getStaffID() == newStaffMember.getStaffID()) { //Check to see if employee ID already taken
 				throw std::invalid_argument;
 			}
 			else {
