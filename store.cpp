@@ -6,7 +6,10 @@
 #include "product.h"
 #include "store.h"
 #include "staff.h"
+#include "transactions.h"
 #include <stdexcept>
+#include <fstream>
+#include <sstream>
 
 //Constructor definition
 Store::Store(std::string name, std::vector<Product> inventory, std::vector<Staff> staff, double cash)
@@ -17,6 +20,12 @@ Store::Store(std::string name, std::vector<Product> inventory, std::vector<Staff
 	if (inventory.empty()) throw std::invalid_argument("Must have at least one product to start with.");
 	if (staff.empty()) throw std::invalid_argument("Must have at least one staff member to start with.");
 	if (cash < 0) throw std::invalid_argument("Must have a positive amount of cash in the register.");
+}
+Store::Store(const std::string& name) : 
+    storeName(name), 
+    storeTotalCash(0.0) 
+{
+    // Initialize with empty inventory/staff
 }
 
 //Getters
@@ -40,15 +49,26 @@ void Store::changeName(std::string newName) {
 }
 
 //Product handling
-void Store::addProduct(const Product& product, int number) { //Add a certain number of product
-	for (int i = 0; i < inventory.size(); i++) {
-		if (inventory.at(i).getProductID() == product.getProductID()) { //at(i) to loop through staff vector
-			inventory.at(i).increaseQuantity(number); //If product ID found, will simply incriment number of product by input variable number
-			return;
-		}
-	}
-	inventory.push_back(product); //If product is not found, add it to the vector
-	return;
+void Store::addProduct(const Product& product) {
+    // Check if product exists
+    for (auto& p : inventory) {
+        if (p.getProductID() == product.getProductID()) {
+            p.increaseQuantity(product.getQuantity());
+            return;
+        }
+    }
+    // If not found, add new product
+    inventory.push_back(product);
+}
+
+void Store::restockProduct(int productID, int quantity) {
+    for (auto& product : inventory) {
+        if (product.getProductID() == productID) {
+            product.increaseQuantity(quantity);
+            return;
+        }
+    }
+    throw std::runtime_error("Product not found");
 }
 
 void Store::removeProduct(int productID, int number) {
@@ -78,6 +98,15 @@ void Store::viewProductList() {
 	}
 }
 
+Product* Store::findProduct(int productID) {
+    for (auto& product : inventory) {
+        if (product.getProductID() == productID) {
+            return &product;
+        }
+    }
+    return nullptr;
+}
+
 //Staff handling
 void Store::addStaff(Staff& newStaffMember) {
 	try {
@@ -94,6 +123,24 @@ void Store::addStaff(Staff& newStaffMember) {
 	catch (std::invalid_argument const& e) {
 		std::cout << e.what(); //Catch exception
 	}
+}
+
+Staff* Store::findStaff(int staffID) {
+    for (auto& staffMember : staff) {
+        if (staffMember.getStaffID() == staffID) {
+            return &staffMember;
+        }
+    }
+    return nullptr;  // Not found
+}
+
+const Staff* Store::findStaff(int staffID) const {
+    for (const auto& staffMember : staff) {
+        if (staffMember.getStaffID() == staffID) {
+            return &staffMember;
+        }
+    }
+    return nullptr;
 }
 
 // Update removeStaff() to deactivate instead of erase:
@@ -143,4 +190,106 @@ void Store::removeCash(double amount) {
 	catch (std::invalid_argument const& e) {
 		std::cout << e.what(); //Catch exception
 	}
+}
+
+bool Store::processTransaction(int staffID, const std::vector<std::pair<int, int>>& items) {
+    // Verify staff exists and is active
+    Staff* staff = findStaff(staffID);
+    if (!staff || !staff->getIsActive()) {
+        throw std::runtime_error("Invalid or inactive staff ID");
+    }
+
+    // Process each item
+    double total = 0.0;
+    for (const auto& item : items) {
+        int productID = item.first;
+        int quantity = item.second;
+        
+        Product* product = findProduct(productID);
+        if (!product) {
+            throw std::runtime_error("Product ID " + std::to_string(productID) + " not found");
+        }
+        
+        if (product->getQuantity() < quantity) {
+            throw std::runtime_error("Insufficient stock for product ID " + std::to_string(productID));
+        }
+        
+        // Update inventory and calculate total
+        product->decreaseQuantity(quantity);
+        total += product->getPrice() * quantity;
+    }
+
+    // Update store cash
+    storeTotalCash += total;
+    return true;
+}
+
+void Store::loadFromFile(const std::string& filename) {
+    std::ifstream productFile(filename + "_products.txt");
+    std::ifstream staffFile(filename + "_staff.txt");
+    
+    // Load products
+    std::string line;
+    while (std::getline(productFile, line)) {
+        std::istringstream iss(line);
+        int id, quantity;
+        double price;
+        std::string name;
+        char comma;
+        
+        if (iss >> id >> comma && std::getline(iss, name, ',') >> 
+            comma >> price >> comma >> quantity) {
+            inventory.emplace_back(id, name, price, quantity);
+        }
+    }
+    
+    // Load staff
+    while (std::getline(staffFile, line)) {
+		std::istringstream iss(line);
+		std::string token;
+		std::vector<std::string> tokens;
+		
+		// Split line by commas
+		while (std::getline(iss, token, ',')) {
+			tokens.push_back(token);
+		}
+		
+		// Should have 4 fields: ID,Name,Position,Active
+		if (tokens.size() == 4) {
+			try {
+				int id = std::stoi(tokens[0]);
+				std::string name = tokens[1];
+				std::string position = tokens[2];
+				bool active = static_cast<bool>(std::stoi(tokens[3]));
+				
+				Staff staff(id, name, position);
+				staff.setIsActive(active);
+				this->staff.push_back(staff);
+			} catch (...) {
+				// Handle conversion errors
+				continue;
+			}
+		}
+	}
+}
+
+void Store::saveToFile(const std::string& filename) const {
+    std::ofstream productFile(filename + "_products.txt");
+    std::ofstream staffFile(filename + "_staff.txt");
+    
+    // Save products
+    for (const auto& product : inventory) {
+        productFile << product.getProductID() << ","
+                   << product.getName() << ","
+                   << product.getPrice() << ","
+                   << product.getQuantity() << "\n";
+    }
+    
+    // Save staff
+    for (const auto& staffMember : staff) {
+        staffFile << staffMember.getStaffID() << ","
+                 << staffMember.getName() << ","
+                 << staffMember.getPosition() << ","
+                 << staffMember.getIsActive() << "\n";
+    }
 }

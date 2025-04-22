@@ -15,6 +15,7 @@ private:
 public:
 	//Constructor
 	Store(std::string name, std::vector<Product> inventory, std::vector<Staff> staff, double cash);
+	Store(const std::string& name);
 
 	//Getters
     const std::string& getName() const;
@@ -27,16 +28,23 @@ public:
 	void addStaff(Staff& staff);
 	void removeStaff(int employeeID);
 	void viewStaffList();
+	Staff* findStaff(int staffID);
+	const Staff* findStaff(int staffID) const;
 
 	//Product management
-	void addProduct(const Product& product, int quantity);
+	void addProduct(const Product& product);
     void removeProduct(int productID, int quantity);
 	void viewProductList();
+	void restockProduct(int productID, int quantity);
+	Product* findProduct(int productID);
 
 	//Other methods
 	void changeName(std::string newStoreName);
   	void addCash(double amount);
   	void removeCash(double amount);
+	bool processTransaction(int staffID, const std::vector<std::pair<int, int>>& items);
+	void loadFromFile(const std::string& filename);
+	void saveToFile(const std::string& filename) const;
 };
 
 #endif //STORE_H

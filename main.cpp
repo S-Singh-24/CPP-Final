@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <limits>  
 #include "store.h"
 #include "product.h"
 #include "staff.h"

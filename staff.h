@@ -26,7 +26,7 @@ public:
     void setIsActive(bool active);
 
     // Other methods
-    void printStaffMember();
+    void printStaffMember() ;
 
 };
 
