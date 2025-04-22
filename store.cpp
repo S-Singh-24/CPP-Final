@@ -110,15 +110,14 @@ Product* Store::findProduct(int productID) {
 //Staff handling
 void Store::addStaff(Staff& newStaffMember) {
 	try {
-		for (int i = 0; i < staff.size(); i++) { //Iterate through staff vector
-			if (staff.at(i).getStaffID() == newStaffMember.getStaffID()) { //Check to see if employee ID already taken
+		for (auto& staffMember : staff) { //Iterate through staff vector
+			if (staffMember.getStaffID() == newStaffMember.getStaffID()) { //Check to see if employee ID already taken
 				throw std::invalid_argument("There is already a staff member with that ID. Please try again.");
 			}
-			else {
-				staff.push_back(newStaffMember); //If not taken, add new staff member to staff vector
-				return;
-			}
 		}
+		//Else add new staff member
+		staff.push_back(newStaffMember); //If not taken, add new staff member to staff vector
+		return;
 	}
 	catch (std::invalid_argument const& e) {
 		std::cout << e.what(); //Catch exception
