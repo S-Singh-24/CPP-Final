@@ -72,7 +72,8 @@ void Store::removeProduct(int productID, int number) {
 
 void Store::viewProductList() {
 	for (int i = 0; i < inventory.size(); i++) {
-		std::cout << inventory.at(i).printProduct() << std::endl; //Types out list of all products - refine later
+		inventory.at(i).printProduct();
+		std::cout << std::endl;
 	}
 }
 
