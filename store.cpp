@@ -1,6 +1,4 @@
 //store.cpp
-//Current issues:
-//  viewProduct() and viewStaffMember() not yet created
 
 #include <iostream>
 #include <string>
