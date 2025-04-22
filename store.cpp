@@ -1,9 +1,6 @@
-//store.cpp
-//Current issues:
-//	need staff.h header to be defined
-//	current linker between class declaration in store.h and class definition in store.cpp requires pointers in constructor
-//	std::invalid_argument raises "type name not allowed" error
-//  viewProduct() and viewStaffMember() not yet created
+// store.cpp
+// Current issues:
+// product.cpp not yet created, may need updates to recalibrate
 
 #include <iostream>
 #include <string>
