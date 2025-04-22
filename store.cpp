@@ -1,34 +1,31 @@
-// store.cpp
-// Current issues:
-// product.cpp not yet created, may need updates to recalibrate
+//store.cpp
+//Current issues:
+//  viewProduct() and viewStaffMember() not yet created
 
 #include <iostream>
 #include <string>
 #include <vector>
-#include <exception>
 #include "product.h"
 #include "store.h"
 #include "staff.h"
+#include <stdexcept>
 
 //Constructor definition
-Store::Store(std::string name, std::vector<Product> inventory, std::vector<Staff> staff, double cash){
-	this->storeName = name; //Requires pointers for constructor link
-	this->inventory = inventory;
-	this->staff = staff;
-	this->storeTotalCash = cash;
+Store::Store(std::string name, std::vector<Product> inventory, std::vector<Staff> staff, double cash)
+	: storeName(name), inventory(inventory), staff(staff), storeTotalCash(cash) {
 }
 
 //Getters
-std::string Store::getName() {
+const std::string& Store::getName() const {
 	return storeName;
 }
-std::vector<Product> Store::getInventory() {
+const std::vector<Product>& Store::getInventory() const {
 	return inventory;
 }
-std::vector<Staff> Store::getStaff() {
+const std::vector<Staff>& Store::getStaff() const {
 	return staff;
 }
-double Store::getStoreTotalCash() {
+double Store::getStoreTotalCash() const {
 	return storeTotalCash;
 }
 
@@ -39,9 +36,9 @@ void Store::changeName(std::string newName) {
 }
 
 //Product handling
-void Store::addProduct(Product& product, int number) { //Add a certain number of product
+void Store::addProduct(const Product& product, int number) { //Add a certain number of product
 	for (int i = 0; i < inventory.size(); i++) {
-		if (inventory.at(i).getProductID() == product.getProductID()) { //at(i) too loop through staff vector
+		if (inventory.at(i).getProductID() == product.getProductID()) { //at(i) to loop through staff vector
 			inventory.at(i).increaseQuantity(number); //If product ID found, will simply incriment number of product by input variable number
 			return;
 		}
@@ -55,7 +52,7 @@ void Store::removeProduct(int productID, int number) {
 		for (int i = 0; i < inventory.size(); i++) {
 			if (inventory.at(i).getProductID() == productID) { //Looks at a specific vector in inventory, then uses .getProductID() to get product ID and compares with given product ID
 				if (inventory.at(i).getQuantity() < number) {
-					throw std::invalid_argument; //If there is less product than number we want to remove, throw exception
+					throw std::invalid_argument("Number of products asked to remove exceeds amount of products in inventory."); //If there is less product than number we want to remove, throw exception
 				}
 				else {
 					inventory.at(i).decreaseQuantity(number); //Remove number of products from inventory
@@ -63,10 +60,10 @@ void Store::removeProduct(int productID, int number) {
 				}
 			}
 		}
-		throw std::invalid_argument;
+		throw std::invalid_argument("Product not found.");
 	}
 	catch (std::invalid_argument const& e) {
-		std::cout << "Number of products asked to remove exceeds amount of products in inventory."; //Catch exception
+		std::cout << e.what(); //Catch exception
 	}
 }
 
@@ -82,7 +79,7 @@ void Store::addStaff(Staff& newStaffMember) {
 	try {
 		for (int i = 0; i < staff.size(); i++) { //Iterate through staff vector
 			if (staff.at(i).getStaffID() == newStaffMember.getStaffID()) { //Check to see if employee ID already taken
-				throw std::invalid_argument;
+				throw std::invalid_argument("There is already a staff member with that ID. Please try again.");
 			}
 			else {
 				staff.push_back(newStaffMember); //If not taken, add new staff member to staff vector
@@ -91,24 +88,26 @@ void Store::addStaff(Staff& newStaffMember) {
 		}
 	}
 	catch (std::invalid_argument const& e) {
-		std::cout << "There is already a staff member with that ID. Please try again."; //Catch exception
+		std::cout << e.what(); //Catch exception
 	}
 }
 
 // Update removeStaff() to deactivate instead of erase:
 void Store::removeStaff(int employeeID) {
-    for (auto& s : staff) {
-        if (s.getStaffID() == employeeID) {
-            s.setIsActive(false);
-            return;
-        }
-    }
-    throw std::invalid_argument("Employee ID not found");
+	for (auto& s : staff) {
+		if (s.getStaffID() == employeeID) {
+			s.setIsActive(false);
+			return;
+		}
+	}
+	throw std::invalid_argument("Employee ID not found");
 }
 
+//Updated to reflect implementation of printStaffMember() in Staff
 void Store::viewStaffList() {
 	for (int i = 0; i < staff.size(); i++) {
-		std::cout << staff.at(i).printStaffMember() << std::endl; //Types out list of all staff members - refine later
+		staff.at(i).printStaffMember(); //Loops through each staff member, printing info one by one
+		std::cout << std::endl;
 	}
 }
 
@@ -116,28 +115,28 @@ void Store::viewStaffList() {
 void Store::addCash(double amount) {
 	try {
 		if (amount <= 0) {
-			throw std::invalid_argument; //Throw exception if cash amount is zero or negative
+			throw std::invalid_argument("Invalid amount of cash. Please add a positive amount of cash to the register."); //Throw exception if cash amount is zero or negative
 		}
 		else {
 			storeTotalCash = storeTotalCash + amount; //If okay value, add to register
 		}
 	}
 	catch (std::invalid_argument const& e) {
-		std::cout << "Invalid amount of cash. Please add a positive amount of cash to the register."; //Catch exception
+		std::cout << e.what(); //Catch exception
 	}
 }
 
 void Store::removeCash(double amount) {
 	try {
 		if (amount <= 0) {
-			throw std::invalid_argument; //Ensure amount of cash to be removed is positive
+			throw std::invalid_argument("Invalid amount of cash. Amount to remove must be positive and no greater than amount currently in the register."); //Ensure amount of cash to be removed is positive
 		}
 		else if (storeTotalCash < amount) {
-			throw std::invalid_argument; //Ensure there is enough cash in the register to be removed
+			throw std::invalid_argument("Invalid amount of cash. Amount to remove must be positive and no greater than amount currently in the register."); //Ensure there is enough cash in the register to be removed
 		}
 		storeTotalCash = storeTotalCash - amount; //If value is okay, remove that much cash from the register
 	}
 	catch (std::invalid_argument const& e) {
-		std::cout << "Invalid amount of cash. Amount to remove must be positive and no greater than amount currently in the register."; //Catch exception
+		std::cout << e.what(); //Catch exception
 	}
 }
