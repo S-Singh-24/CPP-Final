@@ -11,6 +11,12 @@
 //Constructor definition
 Store::Store(std::string name, std::vector<Product> inventory, std::vector<Staff> staff, double cash)
 	: storeName(name), inventory(inventory), staff(staff), storeTotalCash(cash) {
+	
+	//Input validation
+	if (name.empty()) throw std::invalid_argument("Store must have a name.");
+	if (inventory.empty()) throw std::invalid_argument("Must have at least one product to start with.");
+	if (staff.empty()) throw std::invalid_argument("Must have at least one staff member to start with.");
+	if (cash < 0) throw std::invalid_argument("Must have a positive amount of cash in the register.");
 }
 
 //Getters
